@@ -4,8 +4,10 @@ class Note(val title:String, val body:String) {
     }
 }
 
-class Archive(val title:String) {
+class Archive(
+    val title:String,
     val notes: ArrayList<Note> = ArrayList()
+) {
 
     fun addNote(title:String, body:String) {
         notes.add(Note(title, body))

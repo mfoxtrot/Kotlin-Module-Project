@@ -4,6 +4,8 @@ import kotlin.system.exitProcess
 data class MenuItem(val menuItem:String, val menuAction: ()->Unit)
 
 class Menu(private val archives: ArrayList<Archive>) {
+    private val scan = Scanner(System.`in`)
+
     init {
         showMenu(generateMenuItemsForArchive())
     }
@@ -30,9 +32,7 @@ class Menu(private val archives: ArrayList<Archive>) {
     }
 
     private fun showMenu(itemList: ArrayList<MenuItem>) {
-        val scan = Scanner(System.`in`)
         var selectedItem: Int
-
         for (item in itemList) {
             println(item.menuItem)
         }
@@ -42,8 +42,9 @@ class Menu(private val archives: ArrayList<Archive>) {
             if (scan.hasNext()) {
                 if (scan.hasNextInt()) {
                     selectedItem = scan.nextInt()
+                    scan.nextLine() //workaround to fix skipping nextLine() after nextInt()
                     when {
-                        (selectedItem in 0..itemList.size) -> itemList[selectedItem].menuAction()
+                        (selectedItem in 0 until itemList.size) -> itemList[selectedItem].menuAction()
                         else -> showWrongInput()
                     }
                 }
@@ -58,7 +59,7 @@ class Menu(private val archives: ArrayList<Archive>) {
     private fun addArchive() {
         println("Создание нового архива")
         println("Введите название архива:")
-        val newItem = Scanner(System.`in`).nextLine()
+        val newItem = scan.nextLine()
         archives.add(Archive(newItem))
         showMenu(generateMenuItemsForArchive())
     }
@@ -66,9 +67,9 @@ class Menu(private val archives: ArrayList<Archive>) {
     private fun addNote(archiveItem: Int) {
         println("Добавление заметки в архив ${archives[archiveItem]}")
         println("Введите название заметки:")
-        val title = Scanner(System.`in`).nextLine()
+        val title = scan.nextLine()
         println("Введите текст заметки:")
-        val body = Scanner(System.`in`).nextLine()
+        val body = scan.nextLine()
         archives[archiveItem].addNote(title, body)
         showMenu(generateMenuItemsForNotes(archiveItem))
     }
